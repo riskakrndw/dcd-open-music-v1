@@ -14,8 +14,6 @@ const init = async () => {
   const albumService = new AlbumService();
   const songService = new SongService();
 
-  console.log("coba 1");
-
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.HOST,
@@ -27,8 +25,6 @@ const init = async () => {
     },
   });
 
-  console.log("coba 2");
-
   await server.register({
     plugin: album,
     options: {
@@ -37,8 +33,6 @@ const init = async () => {
     },
   });
 
-  console.log("coba 3");
-
   await server.register({
     plugin: song,
     options: {
@@ -46,8 +40,6 @@ const init = async () => {
       validator: SongValidator,
     },
   });
-
-  console.log("coba 4");
 
   server.ext("onPreResponse", (request, h) => {
     const { response } = request;
@@ -63,8 +55,6 @@ const init = async () => {
 
     return h.continue;
   });
-
-  console.log("coba 5");
 
   await server.start();
   console.log(`Server berjalan pada ${server.info.uri}`);

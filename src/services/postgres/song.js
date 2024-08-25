@@ -32,36 +32,27 @@ class SongService {
   }
 
   async getSongs(title, performer) {
-    console.log("pg5===", title, performer);
-
     let query = "SELECT id, title, performer FROM song";
 
-    console.log("pg6");
-
     if (title != "" && performer != "") {
-      console.log("msk1");
       query = {
         text: "SELECT id, title, performer FROM song WHERE title ILIKE $1 AND performer ILIKE $2",
         values: ["%" + title + "%", "%" + performer + "%"],
       };
     } else if (title != "") {
-      console.log("msk2", title);
       query = {
         text: "SELECT id, title, performer FROM song WHERE title ILIKE $1",
         values: ["%" + title + "%"],
       };
     } else if (performer != "") {
-      console.log("msk3");
       query = {
         text: "SELECT id, title, performer FROM song WHERE performer ILIKE $1",
         values: ["%" + performer + "%"],
       };
     }
 
-    console.log("5.2");
     try {
       const result = await this._pool.query(query);
-      console.log("pg6===", result);
       return result.rows.map(MapSong);
     } catch (error) {
       console.error("Database error:", error);
@@ -70,21 +61,16 @@ class SongService {
   }
 
   async getSongById(id) {
-    console.log("pg7");
     const query = {
       text: "SELECT * FROM song WHERE id = $1",
       values: [id],
     };
-    console.log("pg8");
-    const result = await this._pool.query(query);
 
-    console.log("pg9");
+    const result = await this._pool.query(query);
 
     if (!result.rows.length) {
       throw new NotFoundError("Song tidak ditemukan");
     }
-
-    console.log("pg10");
 
     return result.rows.map(MapSong)[0];
   }
@@ -94,13 +80,10 @@ class SongService {
       albumId = null;
     }
 
-    console.log("pg11===", title, year, performer, genre, duration, albumId);
     const query = {
       text: 'UPDATE song SET "albumId" = $1, title = $2, year = $3, genre = $4, performer = $5, duration = $6 WHERE id = $7 RETURNING id',
       values: [albumId, title, year, genre, performer, duration, id],
     };
-
-    console.log("pg12");
 
     // const result = await this._pool.query(query);
     let result;
@@ -113,32 +96,22 @@ class SongService {
       );
     }
 
-    console.log("pg13");
-
     if (!result.rows.length) {
       throw new NotFoundError("Gagal memperbarui song. Id tidak ditemukan");
     }
-
-    console.log("pg14");
   }
 
   async deleteSong(id) {
-    console.log("pg15");
     const query = {
       text: "DELETE FROM song WHERE id = $1 RETURNING id",
       values: [id],
     };
-    console.log("pg16");
 
     const result = await this._pool.query(query);
-
-    console.log("pg17");
 
     if (!result.rows.length) {
       throw new NotFoundError("Song gagal dihapus. Id tidak ditemukan");
     }
-
-    console.log("pg18");
   }
 }
 
