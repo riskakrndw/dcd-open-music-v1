@@ -41,20 +41,20 @@ class SongService {
     if (title != "" && performer != "") {
       console.log("msk1");
       query = {
-        text: "SELECT id, title, performer FROM song WHERE title = $1 AND performer = $2",
-        values: [title, performer],
+        text: "SELECT id, title, performer FROM song WHERE title ILIKE $1 AND performer ILIKE $2",
+        values: ["%" + title + "%", "%" + performer + "%"],
       };
     } else if (title != "") {
-      console.log("msk2");
+      console.log("msk2", title);
       query = {
-        text: "SELECT id, title, performer FROM song WHERE title = $1",
-        values: [title != ""],
+        text: "SELECT id, title, performer FROM song WHERE title ILIKE $1",
+        values: ["%" + title + "%"],
       };
     } else if (performer != "") {
       console.log("msk3");
       query = {
-        text: "SELECT id, title, performer FROM song WHERE performer = $1",
-        values: [performer],
+        text: "SELECT id, title, performer FROM song WHERE performer ILIKE $1",
+        values: ["%" + performer + "%"],
       };
     }
 
